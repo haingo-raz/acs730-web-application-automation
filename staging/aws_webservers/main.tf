@@ -5,7 +5,6 @@ module "security_groups" {
   environment_name = var.environment_name
 }
 
-
 module "aws_webservers" {
   source = "../../modules/aws_webservers"
 
@@ -28,7 +27,6 @@ data "terraform_remote_state" "aws_network" {
     region = "us-east-1"
   }
 }
-
 
 module "load_balancer" {
   source             = "../../modules/load_balancer"
