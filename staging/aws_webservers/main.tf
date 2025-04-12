@@ -28,7 +28,6 @@ data "terraform_remote_state" "aws_network" {
   }
 }
 
-
 module "load_balancer" {
   source             = "../../modules/load_balancer"
   environment        = var.environment_name
