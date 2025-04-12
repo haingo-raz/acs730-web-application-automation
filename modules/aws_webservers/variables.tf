@@ -36,3 +36,26 @@ variable "public_subnet_ids" {
 variable "private_subnet_ids" {
   description = "Map of private subnet IDs"
 }
+
+variable "target_group_arn" {
+  description = "ARN of the load balancer target group"
+  type        = string
+}
+
+variable "asg_min_size" {
+  description = "Minimum size for the auto scaling group"
+  type        = number
+  default     = 1
+}
+
+variable "asg_max_size" {
+  description = "Maximum size for the auto scaling group"
+  type        = number
+  default     = 4
+}
+
+variable "asg_desired_capacity" {
+  description = "Desired capacity for the auto scaling group"
+  type        = number
+  default     = 2
+}

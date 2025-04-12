@@ -58,3 +58,29 @@ resource "aws_security_group" "private_sg" {
     Name = "${var.group_name}-${var.environment_name}-Private-SG"
   }
 }
+
+# Security group for load balancer
+resource "aws_security_group" "lb_sg" {
+  name        = "${var.group_name}-${var.environment_name}-LB-SG"
+  description = "Security group for load balancer"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow HTTP from anywhere"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.group_name}-${var.environment_name}-LB-SG"
+  }
+}
