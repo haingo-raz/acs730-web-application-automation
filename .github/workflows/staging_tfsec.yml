@@ -2,17 +2,15 @@ name: tfsec
 
 on:
   push:
-    branches: [ "dev", "staging"]
-    paths: 
-    - staging/**
+    branches: [ "dev", "staging" ]
+    paths:
+      - staging/**
   pull_request:
-    branches: [ "prod" ]
-    paths: 
-    - staging/**
+    branches: [ "staging" ]
 
 jobs:
   tfsec_tflint_staging:
-    name: Run tfsec sarif report
+    name: Run tfsec SARIF report
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -45,7 +43,6 @@ jobs:
           sarif_file: tfsec.sarif
 
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          # Path to SARIF file relative to the root of the repository
           sarif_file: tfsec.sarif
