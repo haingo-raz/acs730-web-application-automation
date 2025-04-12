@@ -15,5 +15,5 @@ variable "instance_type" {
 
 variable "key_name" {
   type = string
-  default = "nh" # key pair
+  default = "nh"
 }
