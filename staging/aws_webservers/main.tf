@@ -5,7 +5,6 @@ module "security_groups" {
   environment_name = var.environment_name
 }
 
-
 module "aws_webservers" {
   source = "../../modules/aws_webservers"
 
