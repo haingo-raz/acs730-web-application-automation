@@ -1,0 +1,76 @@
+- name: Set Up Webservers
+  hosts:
+    - tag_Name_nh_staging_ASG_Instance
+    - tag_Name_nh_staging_WebServer4
+  gather_facts: true
+  become: yes
+
+  vars:
+    ansible_user: ec2-user
+    ansible_ssh_private_key_file: /home/ec2-user/.ssh/nh
+    s3_bucket: "ansibleprojectassets"
+    image_name: "ansible_terraform"
+    team_name: "NH"
+    member1_name: "Haingo"
+    member2_name: "Neelam"
+
+  tasks:
+    # Check connectivity
+    - name: Ping Webservers to verify SSH connectivity
+      ansible.builtin.ping:
+
+    - name: Check if port 22 (SSH) is open
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host }}"
+        port: 22
+        timeout: 10
+
+    - name: Check if port 80 (HTTP) is open
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host }}"
+        port: 80
+        timeout: 10
+
+    # Install and start web server
+    - name: Install Apache Web Server (httpd)
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+
+    - name: Ensure Apache is running and enabled
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    # Update system (patching)
+    - name: Apply latest security patches
+      ansible.builtin.yum:
+        name: "*"
+        state: latest
+        update_cache: true
+
+    # Setup web content
+    - name: Create assets directory
+      ansible.builtin.file:
+        path: /var/www/html/assets
+        state: directory
+        mode: '0755'
+
+    - name: Download public image from S3
+      ansible.builtin.get_url:
+        url: "https://{{ s3_bucket }}.s3.amazonaws.com/{{ image_name }}.jpeg"
+        dest: "/var/www/html/assets/{{ image_name }}.jpg"
+        mode: '0644'
+
+    - name: Gather EC2 metadata
+      amazon.aws.ec2_metadata_facts:
+
+    - name: Create HTML file from Jinja2 template
+      ansible.builtin.template:
+        src: ../index.j2
+        dest: /var/www/html/index.html
+        mode: '0644'
+      vars:
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        image_url: "/assets/{{ image_name }}.jpg"
