@@ -36,5 +36,5 @@ variable "create_internet_gateway" {
 variable "group_name" {
   type        = string
   description = "nh"
-  default = "nh"
+  default     = "nh"
 }
