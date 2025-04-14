@@ -24,6 +24,14 @@ Detailed deployment instructions will be provided in a future update.
 3. Initialize Terraform with the command: `terraform init`.
 4. Deploy the web server infrastructure by running: `terraform apply`.
 
+## Install Ansible
+1. Install ansible
+Run the following command:
+`sudo yum install -y ansible`
+2.Install Python and Required Libraries (boto3, botocore)
+First, make sure pip3 is installed:
+`sudo yum install -y python3-pip`
+
 # Clean Up Instructions
 ## Destroy the Infrastructure
 Detailed instructions will be provided in a future update.
