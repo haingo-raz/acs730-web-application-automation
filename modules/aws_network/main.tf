@@ -67,7 +67,7 @@ resource "aws_eip" "nat" {
   count      = var.create_nat_gateway ? 1 : 0
 
   tags = {
-    Name        = "${var.group_name}-${var.environment_name}-nat-eip"
+    Name    = "${var.group_name}-${var.environment_name}-nat-eip"
   }
 }
 
