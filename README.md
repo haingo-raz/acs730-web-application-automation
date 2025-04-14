@@ -28,7 +28,7 @@ Detailed deployment instructions will be provided in a future update.
 1. Install ansible
 Run the following command:
 `sudo yum install -y ansible`
-2.Install Python and Required Libraries (boto3, botocore)
+2. Install Python and Required Libraries (boto3, botocore)
 First, make sure pip3 is installed:
 `sudo yum install -y python3-pip`
 
