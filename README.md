@@ -46,7 +46,8 @@ The GitHub Actions workflow will automatically deploy your infrastructure whenev
 ### Configure AWS Credentials in GitHub
 1. Go to the repository's Settings > Secrets > Actions. <br>
 2. Add the following secrets:<br>
-```export AWS_ACCESS_KEY_ID="your-access-key-id"
+```
+export AWS_ACCESS_KEY_ID="your-access-key-id"
 export AWS_SECRET_ACCESS_KEY="your-secret-access-key"
 export AWS_SESSION_TOKEN="your-session-token" 
 ```
