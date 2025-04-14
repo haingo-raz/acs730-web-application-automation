@@ -36,7 +36,7 @@ Then, install the required Python libraries:
 Install the Amazon AWS Ansible collection using:`ansible-galaxy collection install amazon.aws`
 
 ### Run the Playbook
-Once everything is installed, run the playbook to set up the web server:
+Once everything is installed, navigate in the `ansible` directory and run the playbook to set up the web server:
 `ansible-playbook playbooks/webserver_setup.yml`
 
 ## Automatic Deployment with GitHub Actions
@@ -48,8 +48,7 @@ The GitHub Actions workflow will automatically deploy your infrastructure whenev
 2. Add the following secrets:<br>
 ```export AWS_ACCESS_KEY_ID="your-access-key-id"
 export AWS_SECRET_ACCESS_KEY="your-secret-access-key"
-export AWS_SESSION_TOKEN="your-session-token"
-export AWS_REGION="us-east-1"
+export AWS_SESSION_TOKEN="your-session-token" 
 ```
  <br>
 These credentials will allow GitHub Actions to interact with AWS during the deployment process.
@@ -62,20 +61,19 @@ These credentials will allow GitHub Actions to interact with AWS during the depl
 
 Changes to the `staging/aws_network` and `staging/aws_webservers` directories will trigger this workflow.
 
+## Branch Protection
+Direct pushes to prod are prohibited to ensure all changes are thoroughly reviewed and tested through GitHub Actions workflows before deployment.
+
 ### Monitor Deployment
 You can monitor the progress of the GitHub Actions workflow directly in the Actions tab of the GitHub repository. 
 
-
 # Clean Up Instructions
 ## Destroy the Infrastructure
-1. Navigate to the <environmentName>/aws_webservers directory.1. Navigate to the `<environmentName>/aws_webservers` directory.
-2. Destroy the infrastructure with command: `terraform destroy -auto-approve
+1. Navigate to the `<environmentName>/aws_webservers` directory.
+2. Destroy the infrastructure with command: `terraform destroy -auto-approve`.
+3. Navigate to the `<environmentName>/aws_network` directory.
+4. Destroy the infrastructure with command: `terraform destroy -auto-approve`.
 
 ## Clean Your Workspace
 1. Delete the S3 bucket used to store the Terraform remote state files.
 2. Delete the S3 bucket containing the image displayed on the web servers if relevant.
-
-## Branch Protection
-Direct pushes to prod are prohibited to ensure all changes are thoroughly reviewed and tested through GitHub Actions workflows before deployment.
-
-
