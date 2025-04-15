@@ -3,27 +3,37 @@ Build the following architecture:
 ![Topology](topology.png)
 
 # Prerequisites
-## Step 1: Create S3 Buckets
+## Create S3 Buckets
 Set up S3 buckets to store the Terraform state files and the image used by the web servers.
 
 The Terraform state is stored in a bucket called `acs730-final-nh` in this project. You can use any globally unique name and update the value in the `backend.tf` files located under `staging/aws_network` and `prod/aws_network`. The buckets are already set in a way that the remote file of different environments is saved under different folders.
 
 Another bucket named `ansibleprojectassets` has been created for this project. The `ansible_terraform.jpeg` image located under the `assets` folder has been uploaded to that bucket. This image will be displayed on the web servers deployed by Ansible. You can upload your own image to your own bucket and ensure you have access to it.
 
+## Install Terraform
+Make sure you have Terraform installed. Refer to this [documentation](https://developer.hashicorp.com/terraform/install) based on the environment you are using.
+
 # Deployment Instructions 
+
+## Clone the repository using the command
+```bash
+git clone https://github.com/haingo-raz/terraform-git-automation.git
+```
+And navigate to the root directory.
 
 ## Manual Deployment Instructions
 
 ### Deploy the Network Infrastructure
-1. Navigate to the `<environmentName>/aws_network` directory.
+1. Navigate to the `staging/aws_network` directory.
 2. Initialize Terraform with the command: `terraform init`.
 3. Deploy the network infrastructure by running: `terraform apply`.
 
 ### Generate a Key Pair for Web Servers and Deploy Webservers
-1. Navigate to the `<environmentName>/aws_webservers` directory.
-2. Create a key pair named `nh` in the `aws_webservers` folder using the command: `ssh-keygen -t rsa -f nh`.
-3. Initialize Terraform with the command: `terraform init`.
-4. Deploy the web server infrastructure by running: `terraform apply`.
+1. Navigate to the `staging/aws_webservers` directory.
+2. Delete the `nh.pub` from the `staging/aws_webservers` directory because you will create your own keypair.
+3. Create a key pair named `nh` in the `aws_webservers` folder using the command: `ssh-keygen -t rsa -f nh`.
+4. Initialize Terraform with the command: `terraform init`.
+5. Deploy the web server infrastructure by running: `terraform apply`.
 
 ### Install Ansible and required libraries
 1. Install ansible using the  command: `sudo yum install -y ansible`
@@ -36,7 +46,9 @@ Then, install the required Python libraries:
 Install the Amazon AWS Ansible collection using:`ansible-galaxy collection install amazon.aws`
 
 ### Run the Playbook
-Once everything is installed, navigate in the `ansible` directory and run the playbook to set up the web server:
+- Make sure you have access to the keypair you created when deploying the terraform infrastructure.
+- Change the path of the inventory file in the `ansible.cfg` file according to your file organization.
+- Once everything is installed, navigate in the `ansible` directory and run the playbook to set up the web server:
 `ansible-playbook playbooks/webserver_setup.yml`
 
 ## Automatic Deployment with GitHub Actions
@@ -44,14 +56,15 @@ Once everything is installed, navigate in the `ansible` directory and run the pl
 The GitHub Actions workflow will automatically deploy your infrastructure whenever changes are pushed/merged to the `prod` branch.
 
 ### Configure AWS Credentials in GitHub
-1. Go to the repository's Settings > Secrets > Actions. <br>
-2. Add the following secrets:<br>
+1. Go to the repository's Settings > Environments <br>
+2. Create two environments `prod` and `staging`.
+3. Add the following Environment secrets in each environment:<br>
 ```
-export AWS_ACCESS_KEY_ID="your-access-key-id"
-export AWS_SECRET_ACCESS_KEY="your-secret-access-key"
-export AWS_SESSION_TOKEN="your-session-token" 
+AWS_ACCESS_KEY_ID="your-access-key-id"
+AWS_SECRET_ACCESS_KEY="your-secret-access-key"
+AWS_SESSION_TOKEN="your-session-token" 
 ```
- <br>
+<br>
 These credentials will allow GitHub Actions to interact with AWS during the deployment process.
 
 ### Push Changes to Trigger Deployment <br>
@@ -70,9 +83,9 @@ You can monitor the progress of the GitHub Actions workflow directly in the Acti
 
 # Clean Up Instructions
 ## Destroy the Infrastructure
-1. Navigate to the `<environmentName>/aws_webservers` directory.
+1. Navigate to the `staging/aws_webservers` directory.
 2. Destroy the infrastructure with command: `terraform destroy -auto-approve`.
-3. Navigate to the `<environmentName>/aws_network` directory.
+3. Navigate to the `staging/aws_network` directory.
 4. Destroy the infrastructure with command: `terraform destroy -auto-approve`.
 
 ## Clean Your Workspace
